@@ -1,0 +1,4 @@
+/* this file is just a template for generating the real css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

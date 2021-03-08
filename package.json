@@ -1,0 +1,34 @@
+{
+  "name": "freeworld-code-challenge",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "buildCSS": "npx tailwindcss-cli@latest build ./tailwind.css -o ./src/style.css",
+    "buildCSSProd": "NODE_ENV=production npx tailwindcss-cli@latest build ./tailwind.css -o ./src/style.css",
+    "push-gh-pages": "npx push-dir --dir=dist --branch=gh-pages --cleanup --verbose"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dexie": "^3.0.3",
+    "history": "^5.0.0",
+    "lodash": "^4.17.21",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.168",
+    "@types/react": "^17.0.2",
+    "@types/react-dom": "^17.0.1",
+    "@types/react-router-dom": "^5.1.7",
+    "@types/uuid": "^8.3.0",
+    "cssnano": "^4.1.10",
+    "parcel-plugin-sw-precache": "^1.1.2",
+    "typescript": "^4.2.2"
+  }
+}
