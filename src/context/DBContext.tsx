@@ -52,7 +52,6 @@ export const DBProvider = (props: Props) => {
   const resetDB = async () => {
     await Table.clear();
     await Table.bulkAdd(initialCandidateSet);
-    console.log('resetting')
     setState(initialCandidateSet);
   }
 
