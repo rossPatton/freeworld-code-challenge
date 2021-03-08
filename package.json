@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "mkdirp dist && cp robots.txt dist/robots.txt && npm run buildCSS && parcel src/index.html",
-    "build": "mkdirp dist && cp robots.txt dist/robots.txt && npm run buildCSSProd && parcel build src/index.html --public-url ./freeworld-code-challenge",
+    "prebuild": "rm -rf dist/ && mkdirp dist && cp robots.txt dist/robots.txt",
+    "start": "npm run prebuild && npm run buildCSS && parcel src/index.html",
+    "build": "npm run prebuild && npm run buildCSSProd && parcel build src/index.html --public-url /freeworld-code-challenge",
     "buildCSS": "npx tailwindcss-cli@latest build ./tailwind.css -o ./src/style.css",
     "buildCSSProd": "NODE_ENV=production npx tailwindcss-cli@latest build ./tailwind.css -o ./src/style.css",
     "push-gh-pages": "npx push-dir --dir=dist --branch=gh-pages --cleanup --verbose"
