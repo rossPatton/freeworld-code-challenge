@@ -1,4 +1,4 @@
-import React, { memo, useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import cx from 'classnames';
 import reduce from 'lodash/reduce';
 import sortBy from 'lodash/sortBy';
@@ -6,7 +6,7 @@ import sortBy from 'lodash/sortBy';
 import { Candidates } from '../components/Candidates';
 import { DBContext } from '../context/DBContext';
 
-const CalculateForm = memo(() => {
+const CalculateForm = () => {
   const { candidates }: ts.DBContext = useContext(DBContext);
 
   // amount of hours available for instruction
@@ -142,6 +142,6 @@ const CalculateForm = memo(() => {
       }
     </>
   );
-});
+}
 
 export default CalculateForm;
