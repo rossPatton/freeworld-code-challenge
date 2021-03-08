@@ -21,7 +21,7 @@ const AddCandidateForm = memo(() => {
       uuid: v4(),
     });
 
-  const inputCx = 'dark:text-black p-2 rounded w-full';
+  const inputCx = 'border dark:text-black p-2 rounded w-full';
 
   return (
     <>
