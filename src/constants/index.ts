@@ -1,7 +1,6 @@
 import { v4 } from 'uuid';
 
 export const initialCandidateSet: ts.Candidates = [
-
   {
     hoursNeeded: 3,
     name: 'Jane',

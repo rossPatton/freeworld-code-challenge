@@ -45,14 +45,8 @@ export const DBProvider = (props: Props) => {
     fetchData();
   }, []);
 
-  const resetDB = async () => {
-    await Table.clear();
-    await Table.bulkAdd(initialCandidateSet as any);
-    setState(initialCandidateSet);
-  }
-
   return (
-    <DBContext.Provider value={{ candidates, db: Table, resetDB }}>
+    <DBContext.Provider value={{ candidates, db: Table }}>
       {props.children}
     </DBContext.Provider>
   );

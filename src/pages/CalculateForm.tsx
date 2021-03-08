@@ -1,22 +1,35 @@
-import React, { useContext, useState } from 'react';
+import React, { memo, useContext, useState } from 'react';
+import cx from 'classnames';
+import reduce from 'lodash/reduce';
 import sortBy from 'lodash/sortBy';
 
 import { Candidates } from '../components/Candidates';
 import { DBContext } from '../context/DBContext';
 
-const Home = () => {
-  const { candidates, resetDB }: ts.DBContext = useContext(DBContext);
+const CalculateForm = memo(() => {
+  const { candidates }: ts.DBContext = useContext(DBContext);
+
+  // amount of hours available for instruction
   const [hours, setCreditHours] = useState("20");
+
+  // amount of candidates allowed
   const [forConsideration, setNumStudents] = useState("5");
+
+  // total earnings potential
   const [calculatedPotential, setPotential] = useState(null);
+
+  // candidate set after calculating potential
   const [finalCandidates, setFinalCandidates] = useState([]);
+
+  // "loading" states
   const [isCalculating, setCalculatingState] = useState(false);
   const [isResetting, setResetting] = useState(false);
+
+  const isDisabled = !hours || !forConsideration;
 
   const resetPage = async (ev: React.FormEvent) => {
     ev.preventDefault();
     setResetting(true);
-    await resetDB();
     setTimeout(() => {
       setResetting(false);
       setFinalCandidates([]);
@@ -27,6 +40,7 @@ const Home = () => {
   const calculateMaxEarnings = (ev: React.FormEvent) => {
     ev.preventDefault();
     setCalculatingState(true);
+    setPotential(null);
 
     // convert to integer
     const maxHours = parseInt(hours, 10);
@@ -41,19 +55,21 @@ const Home = () => {
     // if safe, we add up the hours and the potential earnings
     // then filter out the null results
     let hoursSoFar = 0;
-    let totalPotential = 0;
     const byEarningsPotential = sortedCandidates.map(c => {
       const tempHoursSoFar = hoursSoFar + c.hoursNeeded;
       if (tempHoursSoFar > maxHours) return null;
       hoursSoFar = tempHoursSoFar;
-      totalPotential += c.potential;
       return c;
     }).filter(c => !!c);
 
-    // we can adjust how many students we are considering
-    // after filtering by hours and potential, we just cut off every
-    // candidate after our class size limit
+    // take the filtered array and lop off anyone after the class size limit
     const byEarningsAndConsideration = byEarningsPotential.slice(0, parseInt(forConsideration, 10));
+
+    const totalPotential = reduce(
+      byEarningsAndConsideration,
+      (sum, c) => sum + c.potential,
+      0
+    );
 
     // the timeout here is to simulate 'loading' time for the user
     // effectively there is no loading, it should be instant but
@@ -79,22 +95,24 @@ const Home = () => {
                 type="number"
                 className={inputCx}
                 onChange={ev => setCreditHours(ev.currentTarget.value)}
-                placeholder="Max Credit Hours"
                 value={hours}
               />
             </label>
-            <label className='flex flex-col'>
+            <label className='flex flex-col mb-2 md:mb-0'>
               Number of students:
               <input
                 type="number"
                 className={inputCx}
                 onChange={ev => setNumStudents(ev.currentTarget.value)}
-                placeholder="Number of students for consideration"
                 value={forConsideration}
               />
             </label>
             <button
-              className='hover:bg-gray-100 dark:hover:bg-gray-800 mr-2 p-2 pl-4 pr-4 rounded border'>
+              disabled={isDisabled}
+              className={cx({
+                'hover:bg-gray-100 dark:hover:bg-gray-800 mb-2 md:mb-0 md:mr-2 p-2 pl-4 pr-4 rounded border': true,
+                'cursor-not-allowed opacity-50': isDisabled,
+              })}>
               Calculate
             </button>
             <button
@@ -105,23 +123,25 @@ const Home = () => {
           </div>
         </fieldset>
       </form>
-      {isResetting && 'Resetting Candidates'}
-      {isCalculating && 'Calculating Potential'}
-      {(!isCalculating && !isResetting) && (
-        <>
-          {calculatedPotential ? (
-            <ul>
-              <li>Potential Earnings: ${calculatedPotential}</li>
-              <li className='mb-4'>
-                Number of Candidates: {finalCandidates.length}
-              </li>
-              <Candidates candidates={finalCandidates} />
-            </ul>
-          ) : <Candidates />}
-        </>
-      )}
+      { isResetting && 'Resetting Candidates'}
+      { isCalculating && 'Calculating Potential'}
+      {
+        (!isCalculating && !isResetting) && (
+          <>
+            {calculatedPotential ? (
+              <ul>
+                <li>Potential Earnings: ${calculatedPotential}</li>
+                <li className='mb-4'>
+                  Number of Candidates: {finalCandidates.length}
+                </li>
+                <Candidates candidates={finalCandidates} />
+              </ul>
+            ) : <Candidates />}
+          </>
+        )
+      }
     </>
   );
-};
+});
 
-export default Home;
+export default CalculateForm;

@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Switch, } from 'react-router-dom';
 
 import { DBProvider } from './context/DBContext';
 
-const Home = lazy(() => import('./pages/Home'));
+const CalculateForm = lazy(() => import('./pages/CalculateForm'));
 const AddCandidateForm = lazy(() => import('./pages/AddCandidateForm'));
 const Nav = lazy(() => import('./components/Nav'));
 
@@ -13,11 +13,11 @@ export const App = () => (
       <Switch>
         <DBProvider>
           <Nav />
-          <main className="dark:bg-gray-700 dark:text-white p-20">
+          <main className="dark:bg-gray-700 dark:text-white p-8 pt-20 md:p-20 md:mt-0">
             <Route
               exact
               path="/freeworld-code-challenge"
-              component={Home}
+              component={CalculateForm}
             />
             <Route
               exact

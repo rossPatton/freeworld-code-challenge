@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "cp robots.txt dist/robots.txt && parcel src/index.html",
     "buildCSS": "npx tailwindcss-cli@latest build ./tailwind.css -o ./src/style.css",
     "buildCSSProd": "NODE_ENV=production npx tailwindcss-cli@latest build ./tailwind.css -o ./src/style.css",
     "push-gh-pages": "npx push-dir --dir=dist --branch=gh-pages --cleanup --verbose"
@@ -12,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "classnames": "^2.2.6",
     "dexie": "^3.0.3",
     "history": "^5.0.0",
     "lodash": "^4.17.21",
@@ -22,6 +24,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@types/classnames": "^2.2.11",
     "@types/lodash": "^4.14.168",
     "@types/react": "^17.0.2",
     "@types/react-dom": "^17.0.1",
