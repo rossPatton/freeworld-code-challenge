@@ -26,14 +26,15 @@ db.open().catch(err => {
 type Props = { children: React.ReactNode };
 export const DBProvider = (props: Props) => {
   const [candidates, setState] = useState([]);
+  const Table = db['candidates'];
 
   useEffect(() => {
     const fetchData = async () => {
-      const candidatesTable = await db['candidates'].toArray();
+      const candidatesTable = await Table.toArray();
 
       // seed with example set if DB is being initialized for the first time
       if (!Array.isArray(candidatesTable) || candidatesTable.length === 0) {
-        await db['candidates'].bulkAdd(initialCandidateSet as any);
+        await Table.bulkAdd(initialCandidateSet as any);
         setState(initialCandidateSet);
       }
 
@@ -44,8 +45,14 @@ export const DBProvider = (props: Props) => {
     fetchData();
   }, []);
 
+  const resetDB = async () => {
+    await Table.clear();
+    await Table.bulkAdd(initialCandidateSet as any);
+    setState(initialCandidateSet);
+  }
+
   return (
-    <DBContext.Provider value={{ candidates, db: db['candidates'] }}>
+    <DBContext.Provider value={{ candidates, db: Table, resetDB }}>
       {props.children}
     </DBContext.Provider>
   );

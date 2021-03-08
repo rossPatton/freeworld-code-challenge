@@ -5,18 +5,23 @@ import { Candidates } from '../components/Candidates';
 import { DBContext } from '../context/DBContext';
 
 const Home = () => {
-  const { candidates }: ts.DBContext = useContext(DBContext);
+  const { candidates, resetDB }: ts.DBContext = useContext(DBContext);
   const [hours, setCreditHours] = useState("20");
   const [forConsideration, setNumStudents] = useState("5");
   const [calculatedPotential, setPotential] = useState(null);
   const [finalCandidates, setFinalCandidates] = useState([]);
   const [isCalculating, setCalculatingState] = useState(false);
+  const [isResetting, setResetting] = useState(false);
 
-  const resetPage = (ev: React.FormEvent) => {
+  const resetPage = async (ev: React.FormEvent) => {
     ev.preventDefault();
-    setCalculatingState(false);
-    setFinalCandidates([]);
-    setPotential(null);
+    setResetting(true);
+    await resetDB();
+    setTimeout(() => {
+      setResetting(false);
+      setFinalCandidates([]);
+      setPotential(null);
+    }, 1000);
   }
 
   const calculateMaxEarnings = (ev: React.FormEvent) => {
@@ -100,8 +105,9 @@ const Home = () => {
           </div>
         </fieldset>
       </form>
-      {isCalculating && 'Calculating Potential...'}
-      {!isCalculating && (
+      {isResetting && 'Resetting Candidates'}
+      {isCalculating && 'Calculating Potential'}
+      {(!isCalculating && !isResetting) && (
         <>
           {calculatedPotential ? (
             <ul>

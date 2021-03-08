@@ -19,5 +19,6 @@ namespace ts {
   declare type DBContext = {
     candidates: Candidates,
     db: DB,
+    resetDB: Function,
   };
 }
