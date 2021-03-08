@@ -12,6 +12,7 @@ export const Candidates = (props: Props) => {
 
   // render custom set if provided, else fallback to db set
   const candidatesToRender = props.candidates || candidates;
+  if (!candidatesToRender || candidatesToRender.length === 0) return null;
 
   return (
     <ul>

@@ -5,7 +5,7 @@ import { initialCandidateSet } from '../constants'
 
 // this ts class just exists to satisfy typescript, code completion
 class CandidatesDB extends Dexie {
-  candidates: Dexie.Table<ts.Candidates, number>;
+  candidates: Dexie.Table<ts.Candidate, number>;
 
   constructor() {
     super('freeworldCodeChallenge');
@@ -25,7 +25,7 @@ db.open().catch(err => {
 
 type Props = { children: React.ReactNode };
 export const DBProvider = (props: Props) => {
-  const [candidates, setState] = useState([]);
+  const [candidates, setState] = useState(initialCandidateSet);
   const Table = db['candidates'];
 
   useEffect(() => {
@@ -34,8 +34,7 @@ export const DBProvider = (props: Props) => {
 
       // seed with example set if DB is being initialized for the first time
       if (!Array.isArray(candidatesTable) || candidatesTable.length === 0) {
-        await Table.bulkAdd(initialCandidateSet as any);
-        setState(initialCandidateSet);
+        return Table.bulkAdd(initialCandidateSet as any);
       }
 
       // or refresh with existing data
