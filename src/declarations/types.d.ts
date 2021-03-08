@@ -18,6 +18,7 @@ namespace ts {
   declare type DB = Dexie.Table<Candidates, number>;
   declare type DBContext = {
     candidates: Candidates,
+    clearDB: Function,
     db: DB,
     resetDB: Function,
   };

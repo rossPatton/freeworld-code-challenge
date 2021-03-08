@@ -7,7 +7,7 @@ import { Candidates } from '../components/Candidates';
 import { DBContext } from '../context/DBContext';
 
 const CalculateForm = memo(() => {
-  const { candidates }: ts.DBContext = useContext(DBContext);
+  const { candidates, clearDB, resetDB }: ts.DBContext = useContext(DBContext);
 
   // amount of hours available for instruction
   const [hours, setCreditHours] = useState("20");
@@ -27,9 +27,24 @@ const CalculateForm = memo(() => {
 
   const isDisabled = !hours || !forConsideration;
 
+  const clear = async (ev: React.FormEvent) => {
+    ev.preventDefault();
+
+    await clearDB();
+
+    setTimeout(() => {
+      setResetting(false);
+      setFinalCandidates([]);
+      setPotential(null);
+    }, 1000);
+  }
+
   const resetPage = async (ev: React.FormEvent) => {
     ev.preventDefault();
+
+    await resetDB();
     setResetting(true);
+
     setTimeout(() => {
       setResetting(false);
       setFinalCandidates([]);
@@ -117,8 +132,13 @@ const CalculateForm = memo(() => {
             </button>
             <button
               onClick={resetPage}
-              className='hover:bg-gray-100 dark:hover:bg-gray-800 p-2 pl-4 pr-4 rounded border'>
+              className='hover:bg-gray-100 dark:hover:bg-gray-800 p-2 pl-4 pr-4 mb-2 md:mb-0 md:mr-2 rounded border'>
               Reset
+            </button>
+            <button
+              onClick={clear}
+              className='hover:bg-gray-100 dark:hover:bg-gray-800 p-2 pl-4 pr-4 rounded border'>
+              Clear
             </button>
           </div>
         </fieldset>

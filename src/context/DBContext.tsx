@@ -34,7 +34,7 @@ export const DBProvider = (props: Props) => {
 
       // seed with example set if DB is being initialized for the first time
       if (!Array.isArray(candidatesTable) || candidatesTable.length === 0) {
-        return Table.bulkAdd(initialCandidateSet as any);
+        return Table.bulkAdd(initialCandidateSet);
       }
 
       // or refresh with existing data
@@ -44,8 +44,20 @@ export const DBProvider = (props: Props) => {
     fetchData();
   }, []);
 
+  const clearDB = async () => {
+    await Table.clear();
+    setState([]);
+  }
+
+  const resetDB = async () => {
+    await Table.clear();
+    await Table.bulkAdd(initialCandidateSet);
+    console.log('resetting')
+    setState(initialCandidateSet);
+  }
+
   return (
-    <DBContext.Provider value={{ candidates, db: Table }}>
+    <DBContext.Provider value={{ candidates, clearDB, db: Table, resetDB }}>
       {props.children}
     </DBContext.Provider>
   );
